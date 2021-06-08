@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-} from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
-import SampleBox from '../components/SampleColor';
+import PalettePreview from '../components/PalettePreview';
 
 const RAINBOW = [
   { colorName: 'Red', hexCode: '#FF0000' },
@@ -53,23 +47,24 @@ const COLOR_PALETTE = [
 export default function Home({ navigation }) {
   return (
     <FlatList
+      style={styles.list}
       data={COLOR_PALETTE}
       keyExtractor={(item) => item.title}
       renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => {
+        <PalettePreview
+          handlePress={() => {
             navigation.navigate('ColorPalette', item);
           }}
-        >
-          <Text style={styles.text}>{item.title}</Text>
-        </TouchableOpacity>
+          palette={item}
+        />
       )}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  text: {
-    fontWeight: 'bold',
+  list: {
+    padding: 10,
+    backgroundColor: 'white',
   },
 });
