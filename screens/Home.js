@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, RefreshControl } from 'react-native';
 
 import PalettePreview from '../components/PalettePreview';
 
 export default function Home({ navigation }) {
-  const [COLOR_PALETTE, setColorPalette] = useState([]);
+  const [colorPalette, setColorPalette] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchColorPalettes = async () => {
     const result = await fetch(
@@ -17,7 +18,14 @@ export default function Home({ navigation }) {
     }
   };
 
+  const refresh = async () => {
+    setIsRefreshing(true);
+    await handleFetchColorPalettes();
+    setIsRefreshing(false);
+  };
+
   const handleFetchColorPalettes = useCallback(fetchColorPalettes, []);
+  const handleRefresh = useCallback(refresh, []);
 
   useEffect(() => {
     handleFetchColorPalettes();
@@ -26,7 +34,7 @@ export default function Home({ navigation }) {
   return (
     <FlatList
       style={styles.list}
-      data={COLOR_PALETTE}
+      data={colorPalette}
       keyExtractor={(item) => item.paletteName}
       renderItem={({ item }) => (
         <PalettePreview
@@ -36,6 +44,8 @@ export default function Home({ navigation }) {
           palette={item}
         />
       )}
+      refreshing={isRefreshing}
+      onRefresh={handleRefresh}
     />
   );
 }
