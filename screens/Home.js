@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
             navigation.navigate('ColorPaletteModal');
           }}
         >
-          <Text>Launch Modal</Text>
+          <Text style={styles.text}>Add a color scheme</Text>
         </TouchableOpacity>
       }
     />
@@ -63,5 +63,11 @@ const styles = StyleSheet.create({
   list: {
     padding: 10,
     backgroundColor: 'white',
+  },
+  text: {
+    color: 'teal',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
 });
