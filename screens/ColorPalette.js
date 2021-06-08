@@ -4,11 +4,11 @@ import { Text, SafeAreaView, StyleSheet, FlatList } from 'react-native';
 import ColorBox from '../components/colorBox';
 
 export default function ColorPalette({ route }) {
-  const { colors, title } = route.params;
+  const { colors, paletteName } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>{title}</Text>
+      <Text>{paletteName}</Text>
       <FlatList
         data={colors}
         renderItem={renderColorBox}

@@ -10,12 +10,12 @@ import {
 export default function PalettePreview({ handlePress, palette }) {
   return (
     <TouchableOpacity onPress={handlePress}>
-      <Text style={styles.text}>{palette.title}</Text>
+      <Text style={styles.text}>{palette.paletteName}</Text>
       <FlatList
         style={styles.list}
         horizontal={true}
         data={palette.colors.slice(0, 5)}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => item.paletteName}
         renderItem={renderColorSample}
       />
     </TouchableOpacity>
