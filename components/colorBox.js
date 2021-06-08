@@ -6,9 +6,16 @@ export default function ColorBox({ colorName, colorHex }) {
     backgroundColor: colorHex,
   };
 
+  const textColor = {
+    color:
+      parseInt(colorHex.replace('#', ''), 16) > 0xffffff / 1.1
+        ? 'black'
+        : 'white',
+  };
+
   return (
     <View style={[styles.box, backgroundColor]}>
-      <Text style={styles.box}>
+      <Text style={[styles.box, textColor]}>
         {colorName}: {colorHex}
       </Text>
     </View>
