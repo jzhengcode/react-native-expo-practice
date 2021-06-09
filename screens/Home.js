@@ -3,7 +3,11 @@ import { FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
 import PalettePreview from '../components/PalettePreview';
 
-export default function Home({ navigation }) {
+export default function Home({ navigation, route }) {
+  const newColorPalette = route.params
+    ? route.params.newColorPalette
+    : undefined;
+
   const [colorPalette, setColorPalette] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -30,6 +34,13 @@ export default function Home({ navigation }) {
   useEffect(() => {
     handleFetchColorPalettes();
   }, [handleFetchColorPalettes]);
+
+  useEffect(() => {
+    if (newColorPalette) {
+      setColorPalette((palette) => [newColorPalette, ...palette]);
+      console.log(colorPalette);
+    }
+  }, [newColorPalette]);
 
   return (
     <FlatList

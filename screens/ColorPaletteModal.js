@@ -14,14 +14,16 @@ const COLORS = [
   { colorName: 'Aqua', hexCode: '#00FFFF' },
 ];
 
-export default function ColorPaletteModal() {
-  const [palette, setPalette] = useState({});
+export default function ColorPaletteModal({ navigation }) {
   const [paletteName, setPaletteName] = useState('');
   const [selectedColors, setSelectedColors] = useState([]);
 
   const submit = () => {
     if (!paletteName) {
       Alert.alert('Please enter a palette name');
+    } else {
+      const newColorPalette = { paletteName, selectedColors };
+      navigation.navigate('Home', { newColorPalette });
     }
   };
 
