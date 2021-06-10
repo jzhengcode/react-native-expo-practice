@@ -6,13 +6,12 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Alert,
+  FlatList,
+  View,
+  Switch,
 } from 'react-native';
 
-const COLORS = [
-  { colorName: 'AliceBlue', hexCode: '#F0F8FF' },
-  { colorName: 'AntiqueWhite', hexCode: '#FAEBD7' },
-  { colorName: 'Aqua', hexCode: '#00FFFF' },
-];
+import { COLORS } from '../assets/COLORS';
 
 export default function ColorPaletteModal({ navigation }) {
   const [paletteName, setPaletteName] = useState('');
@@ -28,6 +27,18 @@ export default function ColorPaletteModal({ navigation }) {
   };
 
   const handleSubmit = useCallback(submit, [paletteName]);
+  const handleUpdate = useCallback(
+    (color, newValue) => {
+      if (newValue === true) {
+        setSelectedColors((current) => [...current, color]);
+      } else {
+        setSelectedColors((current) =>
+          current.filter((c) => c.colorName !== color.colorName),
+        );
+      }
+    },
+    [selectedColors, setSelectedColors],
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -37,12 +48,36 @@ export default function ColorPaletteModal({ navigation }) {
         onChangeText={setPaletteName}
         value={paletteName}
       />
+      <ColorList
+        colors={COLORS}
+        handleToggle={handleUpdate}
+        selectedColors={selectedColors}
+      />
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 }
+
+const ColorList = ({ colors, handleToggle, selectedColors }) => (
+  <FlatList
+    style={styles.list}
+    data={colors}
+    keyExtractor={(item) => item.colorName}
+    renderItem={({ item }) => (
+      <View style={styles.switch}>
+        <Text>{item.colorName}</Text>
+        <Switch
+          value={
+            !!selectedColors.find((color) => color.colorName === item.colorName)
+          }
+          onValueChange={(newValue) => handleToggle(item, newValue)}
+        />
+      </View>
+    )}
+  />
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -65,5 +100,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  color: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'grey',
   },
 });
