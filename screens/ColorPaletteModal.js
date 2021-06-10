@@ -13,12 +13,12 @@ import {
 
 import { COLORS } from '../assets/COLORS';
 
+// Color Palette Modal Component
 export default function ColorPaletteModal({ navigation }) {
   const [paletteName, setPaletteName] = useState('');
   const [selectedColors, setSelectedColors] = useState([]);
 
-  console.log('before anyt toggles', selectedColors.length);
-  const submit = () => {
+  const validateSubmit = () => {
     if (!paletteName) {
       Alert.alert('Please enter a palette name');
     } else if (selectedColors.length < 3) {
@@ -29,20 +29,24 @@ export default function ColorPaletteModal({ navigation }) {
     }
   };
 
-  const handleSubmit = useCallback(submit, [paletteName, selectedColors]);
-  const handleUpdate = useCallback(
-    (color, newValue) => {
-      console.log(selectedColors.length);
-      if (newValue === true) {
-        setSelectedColors((current) => [...current, color]);
-      } else {
-        setSelectedColors((current) =>
-          current.filter((c) => c.colorName !== color.colorName),
-        );
-      }
-    },
-    [selectedColors, setSelectedColors],
-  );
+  const colorToggle = (color, newValue) => {
+    if (newValue === true) {
+      setSelectedColors((current) => [...current, color]);
+    } else {
+      setSelectedColors((current) =>
+        current.filter((c) => c.colorName !== color.colorName),
+      );
+    }
+  };
+
+  const handleSubmit = useCallback(validateSubmit, [
+    paletteName,
+    selectedColors,
+  ]);
+  const handleColorToggle = useCallback(colorToggle, [
+    selectedColors,
+    setSelectedColors,
+  ]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -53,21 +57,19 @@ export default function ColorPaletteModal({ navigation }) {
         value={paletteName}
       />
       <ColorList
-        colors={COLORS}
-        handleToggle={handleUpdate}
+        handleToggle={handleColorToggle}
         selectedColors={selectedColors}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+      <SubmitButton handleSubmit={handleSubmit} />
     </SafeAreaView>
   );
 }
 
-const ColorList = ({ colors, handleToggle, selectedColors }) => (
+// Renders list of avaliable colors
+const ColorList = ({ handleToggle, selectedColors }) => (
   <FlatList
     style={styles.list}
-    data={colors}
+    data={COLORS}
     keyExtractor={(item) => item.colorName}
     renderItem={({ item }) => (
       <View style={styles.switch}>
@@ -81,6 +83,13 @@ const ColorList = ({ colors, handleToggle, selectedColors }) => (
       </View>
     )}
   />
+);
+
+// Renders submit button
+const SubmitButton = ({ handleSubmit }) => (
+  <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+    <Text style={styles.buttonText}>Submit</Text>
+  </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
