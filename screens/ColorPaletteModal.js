@@ -17,18 +17,22 @@ export default function ColorPaletteModal({ navigation }) {
   const [paletteName, setPaletteName] = useState('');
   const [selectedColors, setSelectedColors] = useState([]);
 
+  console.log('before anyt toggles', selectedColors.length);
   const submit = () => {
     if (!paletteName) {
       Alert.alert('Please enter a palette name');
+    } else if (selectedColors.length < 3) {
+      Alert.alert('Please add more than 3 colors');
     } else {
-      const newColorPalette = { paletteName, selectedColors };
+      const newColorPalette = { paletteName, colors: selectedColors };
       navigation.navigate('Home', { newColorPalette });
     }
   };
 
-  const handleSubmit = useCallback(submit, [paletteName]);
+  const handleSubmit = useCallback(submit, [paletteName, selectedColors]);
   const handleUpdate = useCallback(
     (color, newValue) => {
+      console.log(selectedColors.length);
       if (newValue === true) {
         setSelectedColors((current) => [...current, color]);
       } else {
